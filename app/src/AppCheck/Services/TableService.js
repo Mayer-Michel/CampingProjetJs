@@ -60,4 +60,14 @@ export class TableService {
             return false;
         }
     }
+
+    /**
+     * refresh and render the list
+     */
+    fetchAndRender() {
+        const tableService = new TableService();
+        tableService.fetchAndSaveAll().then(() => {
+            this.renderList();
+        });
+    }
 }
