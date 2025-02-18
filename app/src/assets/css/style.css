@@ -1,139 +1,35 @@
-/* ---- Reset ---- */
-*,
-:after,
-:before {
-    border: 0;
-    box-sizing: border-box;
-    margin: 0;
-    outline: 0;
-    padding: 0;
-}
-input,
-textarea {
-    border: 0;
-}
-ol,
-ul {
-    list-style: none;
-}
-/* ---- Communs ---- */
-body {
-    font-family: sans-serif;
-}
-:focus {
-    outline: 2px solid #0a0;
+/* General table styling */
+.reservation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
 }
 
-.error {
-    background-color: #f66;
+.reservation-table th, .reservation-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
 }
 
-input,
-textarea {
-    border-radius: 2px;
-    color: #333;
-    padding: 10px 7px;
+.reservation-table td {
+    background-color: #f9f9f9;
 }
-button {
-    border: 1px solid #666;
-    border-radius: 2px;
+
+/* Styling the header */
+.reservation-table thead {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text color */
+}
+
+.reservation-table th {
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 12px;
+    text-align: center;
+}
+
+.reservation-table th:hover {
+    background-color: #45a049; /* Darker green on hover */
     cursor: pointer;
-    padding: 7px 5px;
 }
-    button:hover {
-        outline: 2px solid #fc0;
-    }
-/* --- Barre d'état --- */
-header {
-    align-items: center;
-    background-color: #333;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-}
-    header > h1 {
-        font-size: 28px;
-        padding: 15px;
-    }
-    header > form {
-        align-items: center;
-        display: flex;
-        flex-grow: 1;
-        flex-wrap: wrap;
-        gap: 10px;
-        padding: 15px;
-    }
-        header > form > textarea {
-            flex-grow: 1;
-        }
-    header > div {
-        align-items: center;
-        display: flex;
-        padding: 15px;
-    }
-/* --- Zone principale --- */
-main {
-    padding: 15px;
-}
-#nota-list {
-    align-items: flex-start;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
-}
-/* -- Nota -- */
-.nota {
-    background-color: #73CEFA;
-    border: 1px solid rgb(0, 0, 0);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    height: 290px;
-    padding: 15px;
-    width: 290px;
-}
-    .nota:nth-child(odd) {
-        transform: rotateZ( -3deg );
-    }
-    .nota:nth-child(even) {
-        transform: rotateZ( 3deg );
-    }
-    .nota > div {
-        padding: 5px;
-    }
-    .nota[data-mode="view"] [data-cmd="edit"],
-    .nota[data-mode="edit"] [data-cmd="view"] {
-        display: none;
-    }
-.nota-header {
-    align-items: center;
-    display: flex;
-    gap: 5px;
-}
-.nota-times {
-    color: #555;
-    flex-grow: 1;
-    font-size: 14px;
-}
-.nota [data-cmd] {
-    display: flex;
-    gap: 5px;
-}
-.nota-title {
-    font-weight: 700;
-}
-.nota-content {
-    flex-grow: 1;
-}
-.nota-title[contenteditable = "true"],
-.nota-content[contenteditable = "true"] {
-    border: 1px solid #666;
-    border-radius: 2px;
-}
-/* ---- Responsive ---- */
-@media (min-width: 992px) {
-    /* --- Barre d'état --- */
-    header {
-        flex-direction: row;
-    }
-}
+

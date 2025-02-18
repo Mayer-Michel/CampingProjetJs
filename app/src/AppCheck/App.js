@@ -90,21 +90,23 @@ class App {
     }
 
     /**
-     * 
-     * @param {} id 
-     * @param {*} isCleaned 
+     * Met à jour le statut de nettoyage
+     * @param {number} id ID de la réservation
+     * @param {boolean} isCleaned Statut de nettoyage 
      */
     updateCleaningStatus(id, isCleaned) {
         const reservations = this.tableService.getAll();
 
         // Find the reservation and update it
         const updatedReservations = reservations.map(reservation => 
-            reservation.id === id ? { ...reservation, cleaned: isCleaned } : reservation
+            reservation.id === id ? { ...reservation, clean: isCleaned } : reservation
         );
 
         // Save updated data
         this.tableService.saveAll(updatedReservations);
-    }
+        // Now update the checkbox in the DOM for this specific reservation
+    
+}
     
 
 }
