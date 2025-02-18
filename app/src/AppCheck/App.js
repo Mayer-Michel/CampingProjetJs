@@ -23,8 +23,6 @@ class App {
         this.renderBaseUI();
 
         this.renderList();
-
-        this.fetchAndRender();
     }
 
     /**
@@ -49,9 +47,12 @@ class App {
      * Affiche la base de l'interface
      */
     renderBaseUI() {
+        const elHeader = document.createElement('header');
+        elHeader.innerHTML = `<h1>Reservations</h1>`;
+
         const elMain = document.createElement('main');
         elMain.append(this.table.getDOM());
-        document.body.append(elMain);
+        document.body.append(elHeader, elMain);
     }
 
     /**
@@ -89,19 +90,22 @@ class App {
     }
 
     /**
-     * Met à jour l'état de nettoyage d'une réservation
-     * @param id - ID de la réservation
-     * @param isCleaned - État de nettoyage
+     * 
+     * @param {} id 
+     * @param {*} isCleaned 
      */
     updateCleaningStatus(id, isCleaned) {
         const reservations = this.tableService.getAll();
 
-        const updatedReservations = reservations.map(reservation =>
+        // Find the reservation and update it
+        const updatedReservations = reservations.map(reservation => 
             reservation.id === id ? { ...reservation, cleaned: isCleaned } : reservation
         );
 
+        // Save updated data
         this.tableService.saveAll(updatedReservations);
     }
+    
 
 }
 
