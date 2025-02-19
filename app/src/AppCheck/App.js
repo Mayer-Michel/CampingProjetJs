@@ -3,8 +3,6 @@ import '../assets/css/style.css';
 import { Table } from './Table';
 import { TableService } from './Services/TableService';
 
-// La class n'est pas exportée, ce qui empêche de l'importer et de l'instancier
-// C'est l'équivalent du constructeur privé en PHP
 class App {
     constructor() {
         this.table = new Table(); // Create table instance
@@ -16,30 +14,19 @@ class App {
      */
     start() {
         console.log('Application démarrée ...');
-
-        // rendu de l'interface Utilisateur
         this.hebergementList();
-
         this.renderBaseUI();
-
         this.renderList();
     }
 
     /**
-     *  récuperation des données
+     * Récupération des données
      */
     hebergementList() {
         console.log('Rendu de l\'interface utilisateur ...');
-
-        // On crée une instance de TableService
         const tableService = new TableService();
-
-        // On appelle la méthode fetchAndSaveAll
-        tableService.fetchAndSaveAll();
-
-        // On appelle la méthode getAll
-        const reservations = tableService.getAll();
-
+        tableService.fetchAndSaveAll();  // Fetch data and save it
+        const reservations = tableService.getAll();  // Get all the reservations
         console.log('reservations:', reservations);
     }
 
@@ -49,7 +36,6 @@ class App {
     renderBaseUI() {
         const elHeader = document.createElement('header');
         elHeader.innerHTML = `<h1>Reservations</h1>`;
-
         const elMain = document.createElement('main');
         elMain.append(this.table.getDOM());
         document.body.append(elHeader, elMain);
@@ -63,7 +49,6 @@ class App {
         if (!tbody) return console.error('TBody not found!');
 
         this.table.clearTable(); // Clear existing rows
-
         const reservations = this.tableService.getAll();
 
         for (let reservation of reservations) {
@@ -75,14 +60,16 @@ class App {
                 <td>${reservation.dateStart}</td>
                 <td>${reservation.dateEnd}</td>
                 <td>
-                    <input type="checkbox" ${reservation.cleaned ? 'checked' : ''} data-id="${reservation.id}">
+                    <input type="checkbox" ${reservation.clean ? 'checked' : ''} data-id="${reservation.id}">
                 </td>
             `;
 
-            // Ajout d'un écouteur d'événements sur la case à cocher
+            // Add event listener to the checkbox
             const checkbox = row.querySelector('input[type="checkbox"]');
             checkbox.addEventListener('change', (event) => {
-                this.updateCleaningStatus(reservation.id, event.target.checked);
+                const id = event.target.getAttribute('data-id');
+                const isCleaned = event.target.checked;
+                this.updateCleaningStatus(id, isCleaned); // Pass the ID here
             });
 
             tbody.append(row);
@@ -90,33 +77,54 @@ class App {
     }
 
     /**
-     * Met à jour le statut de nettoyage
+ * Handle checkbox change event
+ * @param {Event} event
+ */
+    handleCheckboxChange(event) {
+        const checkbox = event.target;
+        const id = checkbox.dataset.id;  // Get the reservation ID from the checkbox
+        console.log('Checkbox ID:', id); // Log the ID
+
+        if (!id) {
+            console.error('No reservation ID found!');
+            return;
+        }
+
+        const isCleaned = checkbox.checked;
+
+        // Update the cleaning status both in the frontend (DOM) and the backend
+        this.updateCleaningStatus(id, isCleaned);
+
+        // Optionally, send the updated data to the backend (API call)
+        this.sendCleaningStatusToBackend(id, isCleaned);
+    }
+
+
+    /**
+     * Envoie la mise à jour du statut de nettoyage au backend
      * @param {number} id ID de la réservation
      * @param {boolean} isCleaned Statut de nettoyage 
      */
     updateCleaningStatus(id, isCleaned) {
-        const reservations = this.tableService.getAll();
-
-        // Find the reservation and update it
-        const updatedReservations = reservations.map(reservation => 
-            reservation.id === id ? { ...reservation, clean: isCleaned } : reservation
-        );
-
-        // Save updated data
-        this.tableService.saveAll(updatedReservations);
-        // Now update the checkbox in the DOM for this specific reservation
+        const data = { clean: isCleaned };
     
+        fetch(`http://localhost:8001/api/reservations/${id}/clean`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
 }
-    
 
-}
-
-
-// On crée une instance de App dans une variable
-// La variable est l'équivalent de la propriété statique "$instance" en PHP
+// Créer une instance de App
 const app = new App();
-// On exporte cette variable.
-// Si à l'extérieur il y a plusieurs imports de cette variable,
-// le système aura mémorisé le premier, et pour les suivants donnera ce qui a été mémorisé
-// C'est l'équivalent de la méthode statique "getApp" en PHP
 export default app;
